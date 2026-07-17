@@ -1,0 +1,28 @@
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# IDEs & Editor configs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Flask configuration & instance folder
+instance/
+.env
+.flaskenv
+
+# Local database locks or system files
+.DS_Store
+Thumbs.db

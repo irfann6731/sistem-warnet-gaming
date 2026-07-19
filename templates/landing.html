@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetGaming Cafe - Ketersediaan PC & Arena Gaming</title>
+    
+    
+    <meta name="description" content="NetGaming Cafe adalah arena gaming dan esports premium 24 jam dengan spesifikasi PC RTX 50 series terbaru. Pantau ketersediaan komputer secara real-time.">
+    <meta name="keywords" content="gaming cafe, warnet gaming, esports arena, sewa pc gaming, rtx 5090, netgaming, warnet yogyakarta">
+    <meta name="author" content="NetGaming Cafe">
+    <meta name="robots" content="index, follow">
+    
+    
+    <meta property="og:title" content="NetGaming Cafe - Ketersediaan PC & Arena Gaming Premium">
+    <meta property="og:description" content="Arena gaming dan esports premium 24 jam dengan spesifikasi PC RTX 50 series terbaru. Pantau ketersediaan komputer secara real-time.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://127.0.0.1:5000/">
+    <meta property="og:image" content="{{ url_for('static', filename='favicon.svg') }}">
+    <meta property="og:site_name" content="NetGaming Cafe">
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="NetGaming Cafe - Ketersediaan PC & Arena Gaming Premium">
+    <meta name="twitter:description" content="Arena gaming dan esports premium 24 jam dengan spesifikasi PC RTX 50 series terbaru. Pantau ketersediaan komputer secara real-time.">
+    <meta name="twitter:image" content="{{ url_for('static', filename='favicon.svg') }}">
+
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "InternetCafe",
+      "name": "NetGaming Cafe",
+      "image": "http://127.0.0.1:5000/static/favicon.svg",
+      "@id": "http://127.0.0.1:5000/#identity",
+      "url": "http://127.0.0.1:5000/",
+      "telephone": "+628123456789",
+      "priceRange": "Rp 7.000 - Rp 8.000",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jl. Ring Road Utara, Condongcatur",
+        "addressLocality": "Sleman",
+        "addressRegion": "Yogyakarta",
+        "postalCode": "55283",
+        "addressCountry": "ID"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -7.7599,
+        "longitude": 110.4090
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "00:00",
+        "closes": "23:59"
+      }
+    }
+    </script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+</head>
+<body class="landing-body">
+
+    
+    <nav class="navbar navbar-expand-lg landing-navbar sticky-top">
+        <div class="container">
+            <a class="brand-logo text-decoration-none" href="#home">
+                <i class="bi bi-controller"></i> NetGaming Cafe
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bi bi-list fs-2 text-primary"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto nav-links-custom">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 active" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="#about">Tentang Kami</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="#services">Layanan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="#status-pc">Status PC</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="#contact">Hubungi Kami</a>
+                    </li>
+                </ul>
+                <div class="nav-action-btn">
+                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-primary fw-semibold px-4 rounded-pill">
+                        <i class="bi bi-speedometer2 me-1"></i> Dashboard Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    
+    <section id="home" class="container pt-4" data-aos="fade-up">
+        <div class="hero-section">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="badge bg-primary px-3 py-2 rounded-pill mb-3 fw-semibold text-uppercase">Premium Gaming Hub</span>
+                    <h1 class="hero-title">Pantau Ketersediaan PC Secara Real-time</h1>
+                    <p class="hero-subtitle mb-4">
+                        Temukan PC gaming berspesifikasi tinggi yang siap Anda gunakan. Pantau status dan estimasi sisa waktu pemakaian secara instan sebelum Anda datang ke lokasi.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#status-pc" class="btn btn-primary btn-lg rounded-pill px-4 py-3 fw-bold shadow-sm text-white">
+                            <i class="bi bi-display me-2"></i> Cek PC Sekarang
+                        </a>
+                        <a href="#about" class="btn btn-outline-light btn-lg rounded-pill px-4 py-3 fw-bold">
+                            <i class="bi bi-info-circle me-2"></i> Pelajari Selengkapnya
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-lg-end d-none d-lg-block">
+                    <div class="hero-icon-glow">
+                        <i class="bi bi-pc-display-horizontal"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="about" class="py-5 bg-white border-top border-bottom">
+        <div class="container py-4">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="about-image-wrapper text-center">
+                        <div class="about-visual-box">
+                            <i class="bi bi-shield-shaded text-primary"></i>
+                            <h4 class="fw-bold mt-3 text-dark">Gaming Maksimal</h4>
+                            <p class="text-muted px-4 small">Kami menyediakan ruang bermain modern yang dirancang khusus untuk kenyamanan dan performa terbaik bagi para gamers.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <span class="text-primary fw-bold text-uppercase tracking-wider">Tentang Kami</span>
+                    <h2 class="fw-bold text-dark mt-2 mb-4 leading-tight">Arena E-Sports Terbaik Untuk Pengalaman Gaming Maksimal</h2>
+                    <p class="text-muted mb-4">
+                        NetGaming Cafe bukan sekadar warnet biasa. Kami adalah arena e-sports premium yang berkomitmen memberikan fasilitas gaming kelas dunia bagi para kasual gamer maupun pemain profesional.
+                    </p>
+                    <p class="text-muted mb-4">
+                        Dengan lingkungan yang bersih, pendingin udara (AC) yang sejuk, layanan operator yang ramah 24 jam, serta spesifikasi PC yang mumpuni, kami menjamin pengalaman bermain Anda bebas hambatan dan penuh keseruan.
+                    </p>
+                    <div class="row g-4 pt-2">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center">
+                                <div class="about-bullet-icon me-3 bg-light-blue">
+                                    <i class="bi bi-trophy text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0">Turnamen Siap</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center">
+                                <div class="about-bullet-icon me-3 bg-light-blue">
+                                    <i class="bi bi-award text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0">Lisensi Game Resmi</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="services" class="py-5 container my-3">
+        <div class="text-center max-w-600 mx-auto mb-5" data-aos="fade-up">
+            <span class="text-primary fw-bold text-uppercase tracking-wider">Fasilitas Utama</span>
+            <h2 class="fw-bold text-dark mt-2">Layanan & Spesifikasi Premium Kami</h2>
+            <p class="text-muted">Kami membekali arena kami dengan fasilitas penunjang performa gaming yang unggul.</p>
+        </div>
+
+        <div class="row g-4">
+            
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-card">
+                    <div class="service-icon-box bg-blue-subtle text-primary">
+                        <i class="bi bi-cpu-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-3">Hardware High-End</h5>
+                    <p class="text-muted mb-0">
+                        PC kami ditenagai oleh prosesor generasi terbaru, kartu grafis NVIDIA RTX 4070, RAM 32GB, serta monitor gaming dengan refresh-rate tinggi 240Hz untuk kelancaran visual maksimal.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-card">
+                    <div class="service-icon-box bg-green-subtle text-green">
+                        <i class="bi bi-router-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-3">Koneksi Dedicated Fiber</h5>
+                    <p class="text-muted mb-0">
+                        Bermain dengan tenang tanpa lag dengan dual-line ISP Fiber Optic 1 Gbps dedicated. Ping sangat rendah (low-ping) yang sangat optimal untuk game-game kompetitif online.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-card">
+                    <div class="service-icon-box bg-red-subtle text-red">
+                        <i class="bi bi-cup-hot-fill"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-3">Kursi Ergonomis & Kafe</h5>
+                    <p class="text-muted mb-0">
+                        Kenyamanan bermain berjam-jam ditopang oleh Kursi Gaming Premium Ergonomis. Tersedia juga kafe kecil yang menyediakan aneka snack, makanan berat, dan minuman dingin.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="status-pc" class="container py-5 my-3">
+        
+        <div class="row g-4 mb-5" data-aos="fade-up">
+            
+            <div class="col-md-4">
+                <div class="stat-card-landing">
+                    <div class="stat-icon-wrapper icon-blue">
+                        <i class="bi bi-pc-display"></i>
+                    </div>
+                    <div class="stat-num">{{ stats.total_komputer }}</div>
+                    <div class="stat-desc">Total Komputer</div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="stat-card-landing stats-success">
+                    <div class="stat-icon-wrapper icon-green">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <div class="stat-num text-green">{{ stats.komputer_tersedia }}</div>
+                    <div class="stat-desc">Standby / Tersedia</div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="stat-card-landing stats-danger">
+                    <div class="stat-icon-wrapper icon-red">
+                        <i class="bi bi-play-circle-fill"></i>
+                    </div>
+                    <div class="stat-num text-red">{{ stats.komputer_digunakan }}</div>
+                    <div class="stat-desc">Sedang Digunakan</div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-3" data-aos="fade-up">
+            <div>
+                <h3 class="fw-bold text-dark mb-1">Status PC Real-time</h3>
+                <p class="text-muted mb-0 small">Pantau ketersediaan komputer di arena gaming secara instan</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <button type="button" class="filter-capsule active" onclick="filterPC('semua', this)">
+                    <i class="bi bi-grid-fill me-1"></i> Semua PC
+                </button>
+                <button type="button" class="filter-capsule" onclick="filterPC('Tersedia', this)">
+                    <i class="bi bi-check-circle me-1"></i> Standby ({{ stats.komputer_tersedia }})
+                </button>
+                <button type="button" class="filter-capsule" onclick="filterPC('Digunakan', this)">
+                    <i class="bi bi-play-circle me-1"></i> Dipakai ({{ stats.komputer_digunakan }})
+                </button>
+            </div>
+        </div>
+
+        
+        <div class="mb-4" data-aos="fade-up">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 border-color-custom">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text" id="pc-search-input" class="form-control border-start-0 border-color-custom px-2 py-2.5" placeholder="Cari PC berdasarkan nomor (misal: PC-01) atau tipe (misal: Elite, Pro, VIP, Streaming)..." style="font-size: 0.9rem;">
+            </div>
+        </div>
+
+        
+        <div class="landing-pc-scroll" data-aos="fade-up">
+            
+            <div class="row g-4 m-0" id="pc-container">
+                {% for pc in list_komputer %}
+            <div class="col-xl-3 col-lg-4 col-md-6 pc-item-card" data-status="{{ pc.status }}">
+                <div class="pc-grid-card">
+                    <div class="pc-card-header">
+                        <div>
+                            <div class="pc-title-id">{{ pc.nomor_pc }}</div>
+                            <div class="pc-name mb-1">{{ pc.nama_pc }}</div>
+                            <div class="pc-specs text-muted small" style="font-size: 0.78rem; line-height: 1.3;"><i class="bi bi-cpu me-1"></i> {{ pc.spesifikasi }}</div>
+                        </div>
+                        <div>
+                            {% if pc.status == 'Tersedia' %}
+                            <span class="pc-badge badge-standby">
+                                <i class="bi bi-check-circle-fill me-1"></i> Standby
+                            </span>
+                            {% else %}
+                            <span class="pc-badge badge-digunakan-landing">
+                                <i class="bi bi-lock-fill me-1"></i> Dipakai
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="pc-card-body">
+                        <div class="pc-info-box">
+                            {% if pc.status == 'Tersedia' %}
+                            <div class="info-label">Status PC</div>
+                            <div class="info-value text-green">
+                                <i class="bi bi-unlock-fill"></i> Siap Digunakan
+                            </div>
+                            {% else %}
+                            <div class="info-label">Sisa Sesi</div>
+                            <div class="info-value text-red mb-2">
+                                <i class="bi bi-clock-history"></i> {{ pc.sisa_waktu }}
+                            </div>
+                            <div class="info-label">Selesai Jam</div>
+                            <div class="info-value text-dark">
+                                <i class="bi bi-hourglass-split"></i> {{ pc.waktu_selesai }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-pc-display-horizontal"></i>
+                    <h4>Belum ada komputer terdaftar</h4>
+                    <p class="mb-0 small">Hubungi administrator untuk menambahkan komputer ke sistem.</p>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    
+    <section id="contact" class="py-5 bg-white border-top">
+        <div class="container py-4">
+            <div class="row g-5">
+                
+                <div class="col-lg-5" data-aos="fade-right">
+                    <span class="text-primary fw-bold text-uppercase tracking-wider">Kontak Kami</span>
+                    <h2 class="fw-bold text-dark mt-2 mb-4">Ada Pertanyaan? Kunjungi Kami Kapan Saja</h2>
+                    <p class="text-muted mb-4">
+                        Kami buka 24 jam sehari, 7 hari seminggu. Segera kunjungi lokasi kami atau hubungi kami untuk info pemesanan ruangan V.I.P atau event turnamen.
+                    </p>
+
+                    <div class="d-flex mb-4">
+                        <div class="contact-info-icon me-3">
+                            <i class="bi bi-geo-alt-fill text-primary"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">Lokasi Arena</h6>
+                            <p class="text-muted mb-0">Jl. Ring Road Utara, Condongcatur, Sleman, Yogyakarta</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-4">
+                        <div class="contact-info-icon me-3">
+                            <i class="bi bi-clock-fill text-primary"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">Jam Operasional</h6>
+                            <p class="text-muted mb-0">Buka Setiap Hari (24 Jam Non-stop)</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-4">
+                        <div class="contact-info-icon me-3">
+                            <i class="bi bi-telephone-inbound-fill text-primary"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-dark mb-1">WhatsApp & Telepon</h6>
+                            <p class="text-muted mb-0">+62 812-3456-7890</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <div class="col-lg-7" data-aos="fade-left">
+                    <div class="contact-form-wrapper p-4 bg-light rounded-4 shadow-sm border">
+                        <h4 class="fw-bold text-dark mb-4">Kirim Pesan Langsung</h4>
+                        <form id="contact-form">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark small">Nama Lengkap</label>
+                                    <input type="text" name="nama" class="form-control" placeholder="Nama Anda" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark small">Email</label>
+                                    <input type="email" name="email" class="form-control" placeholder="Email Anda" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold text-dark small">Subjek</label>
+                                    <input type="text" name="subjek" class="form-control" placeholder="Subjek pesan" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold text-dark small">Pesan</label>
+                                    <textarea name="pesan" class="form-control" rows="4" placeholder="Tuliskan pesan Anda..." required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary-custom w-100 py-3 rounded-pill fw-bold">
+                                        <i class="bi bi-send-fill me-2"></i> Kirim Pesan
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <footer class="footer-section bg-dark text-light py-5">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <div class="brand-logo text-white mb-2">
+                        <i class="bi bi-controller text-primary"></i> NetGaming Cafe
+                    </div>
+                    <p class="text-muted mb-0 small">Arena e-sports premium terbaik dengan spesifikasi tinggi dan koneksi dedicated ultra stabil 24 jam non-stop.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="mb-3">
+                        <a href="#" class="text-light me-3 fs-5 text-decoration-none"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light me-3 fs-5 text-decoration-none"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light me-3 fs-5 text-decoration-none"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-light fs-5 text-decoration-none"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <div class="text-muted small">&copy; 2026 NetGaming Cafe. All rights reserved.</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script>
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links-custom .nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 120)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        let activeStatus = 'semua';
+        let searchQuery = '';
+
+        function filterPC(status, btnElement) {
+            const buttons = document.querySelectorAll('.filter-capsule');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            activeStatus = status;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const cards = document.querySelectorAll('.pc-item-card');
+            let hasVisibleCard = false;
+
+            cards.forEach(card => {
+                const pcStatus = card.getAttribute('data-status');
+                const pcNo = card.querySelector('.pc-title-id').textContent.toLowerCase();
+                const pcName = card.querySelector('.pc-name').textContent.toLowerCase();
+                const pcSpecs = card.querySelector('.pc-specs') ? card.querySelector('.pc-specs').textContent.toLowerCase() : '';
+
+                const matchesStatus = (activeStatus === 'semua' || pcStatus === activeStatus);
+                const matchesSearch = (pcNo.includes(searchQuery) || pcName.includes(searchQuery) || pcSpecs.includes(searchQuery));
+
+                if (matchesStatus && matchesSearch) {
+                    card.style.display = 'block';
+                    hasVisibleCard = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            let emptyMsg = document.getElementById('no-pc-match-msg');
+            if (!hasVisibleCard) {
+                if (!emptyMsg) {
+                    emptyMsg = document.createElement('div');
+                    emptyMsg.id = 'no-pc-match-msg';
+                    emptyMsg.className = 'col-12 text-center py-5 text-muted';
+                    emptyMsg.innerHTML = `
+                        <h5>Tidak ada PC yang cocok</h5>
+                        <p class="mb-0 small">Silakan ubah filter atau kata kunci pencarian Anda.</p>
+                    `;
+                    document.getElementById('pc-container').appendChild(emptyMsg);
+                } else {
+                    emptyMsg.style.display = 'block';
+                }
+            } else {
+                if (emptyMsg) {
+                    emptyMsg.style.display = 'none';
+                }
+            }
+        }
+
+        document.getElementById('pc-search-input').addEventListener('input', function(e) {
+            searchQuery = e.target.value.trim().toLowerCase();
+            applyFilters();
+        });
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-in-out'
+        });
+
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            Swal.fire({
+                title: 'Mengirim...',
+                text: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            fetch("{{ url_for('dashboard.simpan_kontak') }}", {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        confirmButtonColor: '#0d6efd'
+                    });
+                    this.reset();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: data.message,
+                        confirmButtonColor: '#0d6efd'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Terjadi kesalahan sistem, silakan coba lagi.',
+                    confirmButtonColor: '#0d6efd'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Manajemen Komputer - NetGaming Admin{% endblock %}
+{% block header_title %}Daftar Komputer{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="m-0 fw-bold">Data Komputer</h5>
+                <a href="{{ url_for('komputer.tambah') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Tambah PC</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="p-3 border-bottom bg-light">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" id="table-search" class="form-control border-start-0 ps-0" placeholder="Cari nomor, nama, spesifikasi, atau status PC...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom m-0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nomor PC</th>
+                                <th>Nama PC</th>
+                                <th>Spesifikasi</th>
+                                <th>Status</th>
+                                <th class="text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pc in list_komputer %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><span class="fw-semibold text-primary">{{ pc.nomor_pc }}</span></td>
+                                <td>{{ pc.nama_pc }}</td>
+                                <td><small class="text-muted">{{ pc.spesifikasi }}</small></td>
+                                <td>
+                                    {% if pc.status == 'Tersedia' %}
+                                    <span class="badge badge-tersedia">Tersedia</span>
+                                    {% else %}
+                                    <span class="badge badge-digunakan">Digunakan</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    
+                                    <span style="display:none;">{{ pc.status }}</span>
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('komputer.edit', id=pc.id) }}" class="btn btn-outline-primary btn-sm me-1"><i class="bi bi-pencil-square"></i> Edit</a>
+                                    <form action="{{ url_for('komputer.hapus', id=pc.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus komputer ini?')">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" {% if pc.status == 'Digunakan' %}disabled title="PC sedang digunakan dan tidak dapat dihapus"{% endif %}>
+                                            <i class="bi bi-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">Belum ada komputer terdaftar</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('table-search').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('table tbody tr');
+        
+        rows.forEach(row => {
+            if (row.cells.length === 1 && row.cells[0].getAttribute('colspan')) {
+                return;
+            }
+            
+            const textContent = row.textContent.toLowerCase();
+            if (textContent.includes(query)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

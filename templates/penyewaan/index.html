@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    .ts-wrapper.form-select {
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+    }
+    .ts-control {
+        border: 1px solid var(--border-color) !important;
+        border-radius: var(--border-radius-sm) !important;
+        padding: 10px 14px !important;
+        font-size: 0.95rem !important;
+        transition: border-color 0.2s, box-shadow 0.2s !important;
+        background-color: var(--bg-white) !important;
+    }
+    .ts-wrapper.focus .ts-control {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
+    }
+    .ts-dropdown {
+        border-radius: var(--border-radius-sm) !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+        border: 1px solid var(--border-color) !important;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Transaksi Sewa Baru - NetGaming Admin{% endblock %}
+{% block header_title %}Penyewaan Komputer Baru{% endblock %}
+
+{% block content %}
+<div class="row">
+    
+    <div class="col-md-6 col-sm-12 mb-4">
+        <div class="card card-custom">
+            <div class="card-header">
+                <h5 class="m-0 fw-bold">Pilih Pelanggan & Komputer</h5>
+            </div>
+            <div class="card-body">
+                <form id="sewaForm" action="{{ url_for('penyewaan.index') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="sewa_id_pelanggan" class="form-label fw-medium">Pelanggan</label>
+                        <select class="form-select" id="sewa_id_pelanggan" name="id_pelanggan" required>
+                            <option value="" disabled selected>-- Pilih Pelanggan --</option>
+                            {% for plg in list_pelanggan %}
+                            <option value="{{ plg.id }}">{{ plg.nama_pelanggan }} ({{ plg.nomor_pelanggan }} - {{ plg.jenis_pelanggan }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sewa_id_komputer" class="form-label fw-medium">Komputer Tersedia</label>
+                        <select class="form-select" id="sewa_id_komputer" name="id_komputer" required>
+                            <option value="" disabled selected>-- Pilih Komputer --</option>
+                            {% for pc in list_komputer %}
+                            <option value="{{ pc.id }}">{{ pc.nomor_pc }} - {{ pc.nama_pc }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sewa_durasi" class="form-label fw-medium">Durasi Sewa (Jam)</label>
+                        <input type="number" class="form-control" id="sewa_durasi" name="durasi" min="1" placeholder="Masukkan jumlah jam sewa" required>
+                    </div>
+
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('dashboard.index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Batal</a>
+                        <button type="button" id="btnConfirmSewa" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal" disabled>
+                            <i class="bi bi-play-fill"></i> Mulai Sewa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="col-md-6 col-sm-12 mb-4">
+        <div id="biaya_preview_container" class="card card-custom d-none border-primary">
+            <div class="card-header bg-primary text-white">
+                <h5 class="m-0 fw-bold"><i class="bi bi-receipt"></i> Estimasi Biaya Sewa</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Jenis Pelanggan:</span>
+                    <span id="preview_jenis" class="fw-bold">-</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Tarif per Jam:</span>
+                    <span id="preview_tarif" class="fw-bold">-</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fs-5 fw-medium">Total Biaya:</span>
+                    <span id="preview_total" class="fs-4 fw-bold text-primary">-</span>
+                </div>
+                <div class="mt-3 bg-light p-3 rounded-2 text-muted small">
+                    <i class="bi bi-info-circle-fill text-primary"></i> Tarif reguler: <strong>Rp 8.000 / jam</strong>. Tarif Member mendapatkan potongan harga khusus menjadi <strong>Rp 7.000 / jam</strong>.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-dark" id="confirmModalLabel"><i class="bi bi-question-circle text-primary"></i> Konfirmasi Transaksi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-3">
+                Apakah Anda yakin ingin memproses transaksi sewa ini dan mengubah status komputer menjadi <strong>Digunakan</strong>?
+            </div>
+            <div class="modal-footer border-0 pt-0 d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kembali</button>
+                <button type="button" id="btnSubmitForm" class="btn btn-primary">Proses Sewa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('sewaForm');
+        const btnConfirm = document.getElementById('btnConfirmSewa');
+        const btnSubmit = document.getElementById('btnSubmitForm');
+        const selectPelanggan = document.getElementById('sewa_id_pelanggan');
+        const selectKomputer = document.getElementById('sewa_id_komputer');
+        
+        function validateForm() {
+            const isVal = form.checkValidity();
+            btnConfirm.disabled = !isVal;
+        }
+
+        form.addEventListener('input', validateForm);
+        form.addEventListener('change', validateForm);
+
+        btnSubmit.addEventListener('click', function() {
+            form.submit();
+        });
+
+        const tomPelanggan = new TomSelect('#sewa_id_pelanggan', {
+            create: false,
+            placeholder: "-- Pilih Pelanggan --",
+            onChange: function(value) {
+                selectPelanggan.dispatchEvent(new Event('change'));
+                validateForm();
+            }
+        });
+
+        const tomKomputer = new TomSelect('#sewa_id_komputer', {
+            create: false,
+            placeholder: "-- Pilih Komputer --",
+            onChange: function(value) {
+                selectKomputer.dispatchEvent(new Event('change'));
+                validateForm();
+            }
+        });
+    });
+</script>
+{% endblock %}

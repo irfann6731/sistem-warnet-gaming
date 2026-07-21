@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Manajemen Pelanggan - NetGaming Admin{% endblock %}
+{% block header_title %}Daftar Pelanggan{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="m-0 fw-bold">Data Pelanggan</h5>
+                <a href="{{ url_for('pelanggan.tambah') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Tambah Pelanggan</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="p-3 border-bottom bg-light">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" id="table-search" class="form-control border-start-0 ps-0" placeholder="Cari nomor, nama, atau tipe member pelanggan...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom m-0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nomor Pelanggan</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Jenis Pelanggan</th>
+                                <th class="text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for plg in list_pelanggan %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><span class="fw-semibold text-primary">{{ plg.nomor_pelanggan }}</span></td>
+                                <td>{{ plg.nama_pelanggan }}</td>
+                                <td>
+                                    {% if plg.jenis_pelanggan == 'Member' %}
+                                    <span class="badge bg-primary text-white">Member</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary text-white">Biasa</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('pelanggan.edit', id=plg.id) }}" class="btn btn-outline-primary btn-sm me-1"><i class="bi bi-pencil-square"></i> Edit</a>
+                                    <form action="{{ url_for('pelanggan.hapus', id=plg.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">Belum ada pelanggan terdaftar</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('table-search').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('table tbody tr');
+        
+        rows.forEach(row => {
+            if (row.cells.length === 1 && row.cells[0].getAttribute('colspan')) {
+                return;
+            }
+            
+            const textContent = row.textContent.toLowerCase();
+            if (textContent.includes(query)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

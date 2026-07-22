@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Riwayat Transaksi - NetGaming Admin{% endblock %}
+{% block header_title %}Riwayat Penyewaan{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header">
+                <h5 class="m-0 fw-bold">Daftar Transaksi</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="p-3 border-bottom bg-light">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" id="table-search" class="form-control border-start-0 ps-0" placeholder="Cari nama pelanggan, nomor PC, biaya, durasi, tanggal, atau status...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom m-0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Pelanggan</th>
+                                <th>Komputer</th>
+                                <th>Durasi</th>
+                                <th>Biaya</th>
+                                <th>Waktu Transaksi</th>
+                                <th>Status</th>
+                                <th class="text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trx in list_transaksi %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <span class="fw-semibold text-dark">{{ trx.pelanggan.nama_pelanggan }}</span><br>
+                                    <small class="text-muted">{{ trx.pelanggan.nomor_pelanggan }} ({{ trx.pelanggan.jenis_pelanggan }})</small>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold text-dark">{{ trx.komputer.nomor_pc }}</span><br>
+                                    <small class="text-muted">{{ trx.komputer.nama_pc }}</small>
+                                </td>
+                                <td>{{ trx.durasi }} jam</td>
+                                <td>
+                                    <span class="fw-semibold text-primary">{{ trx.total_biaya | rupiah }}</span><br>
+                                    <small class="text-muted">{{ trx.tarif_per_jam | rupiah }}/jam</small>
+                                </td>
+                                <td>{{ trx.waktu_transaksi | datetime_format }}</td>
+                                <td>
+                                    {% if trx.status == 'Aktif' %}
+                                    <span class="badge badge-digunakan">Aktif</span>
+                                    {% else %}
+                                    <span class="badge badge-tersedia">Selesai</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('transaksi.detail', id=trx.id) }}" class="btn btn-outline-secondary btn-sm me-1" title="Detail"><i class="bi bi-eye"></i> Detail</a>
+                                    {% if trx.status == 'Aktif' %}
+                                    <form action="{{ url_for('transaksi.selesai', id=trx.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menyelesaikan sesi sewa ini?')">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="bi bi-check-circle"></i> Selesai
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-muted">Belum ada transaksi</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('table-search').addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('table tbody tr');
+        
+        rows.forEach(row => {
+            if (row.cells.length === 1 && row.cells[0].getAttribute('colspan')) {
+                return;
+            }
+            
+            const textContent = row.textContent.toLowerCase();
+            if (textContent.includes(query)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

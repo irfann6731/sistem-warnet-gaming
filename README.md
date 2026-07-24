@@ -1,7 +1,9 @@
 # Sistem Manajemen Warnet Gaming (NetGaming Esports Arena)
 
+> 🌐 **Live Demo / Link Aplikasi**: [https://gaming-internet-cafe-management-sys.vercel.app/](https://gaming-internet-cafe-management-sys.vercel.app/)  
 > **Proyek Ujian Mata Kuliah Pemrograman Web**  
-> Aplikasi Manajemen Warnet Modular, Real-Time, dan Responsive Berbasis Web.
+> Aplikasi Manajemen Warnet Modular, Real-Time, dan Responsive Berbasis Web.  
+> *(Kredensial Login Administrator: Username `admin` | Password `admin`)*
 
 Sistem Manajemen Warnet Gaming adalah aplikasi berbasis web modern yang dirancang untuk mengelola operasional warnet secara modular, efisien, dan terstruktur. Aplikasi ini dikembangkan untuk memenuhi tugas dan ujian akhir mata kuliah **Pemrograman Web** dengan mengimplementasikan arsitektur web client-server, komunikasi data asinkronus (AJAX), manajemen basis data relasional MySQL, styling visual responsive modern (Bootstrap 5 & Custom CSS), serta penerapan paradigma Object-Oriented Programming (OOP) pada layer back-end Python Flask.
 

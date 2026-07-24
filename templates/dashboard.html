@@ -1,0 +1,403 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+{% endblock %}
+
+{% block title %}Dashboard - NetGaming Admin{% endblock %}
+{% block header_title %}Dashboard Ringkasan{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div></div>
+    <button id="btn-export-pdf" class="btn btn-primary btn-sm shadow-sm"><i class="bi bi-file-earmark-pdf-fill me-1"></i> Export PDF Laporan</button>
+</div>
+<div class="row">
+    
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-custom card-stats mb-4">
+            <div class="card-body">
+                <div class="stat-label">Total Komputer</div>
+                <div class="stat-value">{{ stats.total_komputer }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-custom card-stats stats-success mb-4">
+            <div class="card-body">
+                <div class="stat-label">Komputer Tersedia</div>
+                <div class="stat-value">{{ stats.komputer_tersedia }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-custom card-stats stats-danger mb-4">
+            <div class="card-body">
+                <div class="stat-label">Sedang Digunakan</div>
+                <div class="stat-value">{{ stats.komputer_digunakan }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-custom card-stats mb-4">
+            <div class="card-body">
+                <div class="stat-label">Total Pelanggan</div>
+                <div class="stat-value">{{ stats.total_pelanggan }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    
+    <div class="col-xl-4 col-md-6">
+        <div class="card card-custom card-stats mb-4">
+            <div class="card-body">
+                <div class="stat-label">Total Transaksi</div>
+                <div class="stat-value">{{ stats.total_transaksi }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-6">
+        <div class="card card-custom card-stats stats-success mb-4">
+            <div class="card-body">
+                <div class="stat-label">Pendapatan Hari Ini</div>
+                <div class="stat-value">{{ stats.pendapatan_hari_ini | rupiah }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-12">
+        <div class="card card-custom card-stats mb-4">
+            <div class="card-body">
+                <div class="stat-label">Pendapatan Keseluruhan</div>
+                <div class="stat-value">{{ stats.pendapatan_keseluruhan | rupiah }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row mt-2 mb-4">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="m-0 fw-bold"><i class="bi bi-grid-3x3-gap text-primary me-2"></i> Ketersediaan PC</h5>
+                <div>
+                    <span class="badge bg-success rounded-pill me-1" style="font-size: 0.8rem; padding: 6px 12px;"><i class="bi bi-check-circle me-1"></i> Tersedia: {{ stats.komputer_tersedia }}</span>
+                    <span class="badge bg-danger rounded-pill" style="font-size: 0.8rem; padding: 6px 12px;"><i class="bi bi-lock me-1"></i> Digunakan: {{ stats.komputer_digunakan }}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="input-group shadow-sm" style="border-radius: var(--border-radius-sm); overflow: hidden;">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" id="pc-grid-search" class="form-control border-start-0 ps-0" placeholder="Cari PC (Nomor, Nama, Spesifikasi, Pengguna)...">
+                    </div>
+                </div>
+                <div class="row g-3" id="pc-visual-grid" style="max-height: 480px; overflow-y: auto; padding: 2px;">
+                    {% for pc in list_komputer %}
+                    <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 pc-grid-item" data-status="{{ pc.status }}">
+                        <div class="card border-0 h-100 p-3 text-center position-relative {% if pc.status == 'Tersedia' %}bg-success-subtle border-start border-4 border-success{% else %}bg-danger-subtle border-start border-4 border-danger{% endif %}" style="transition: transform 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-radius: 12px;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1.0)'">
+                            
+                            <div class="position-absolute top-0 end-0 p-2">
+                                {% if pc.status == 'Tersedia' %}
+                                <i class="bi bi-check-circle-fill text-success" style="font-size: 0.9rem;" title="Tersedia"></i>
+                                {% else %}
+                                <i class="bi bi-lock-fill text-danger" style="font-size: 0.9rem;" title="Sedang Digunakan"></i>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="fw-bold fs-5 mb-1 {% if pc.status == 'Tersedia' %}text-success-emphasis{% else %}text-danger-emphasis{% endif %}">{{ pc.nomor_pc }}</div>
+                            <div class="small text-dark fw-bold mb-1" style="font-size: 0.85rem; opacity: 0.85;">{{ pc.nama_pc }}</div>
+                            <div class="text-muted small mb-2" style="font-size: 0.74rem; line-height: 1.25;"><i class="bi bi-cpu text-muted"></i> {{ pc.spesifikasi }}</div>
+                            
+                            <div class="mt-auto">
+                                {% if pc.status == 'Tersedia' %}
+                                <span class="badge bg-success text-white px-2 py-1" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3px;">STANDBY</span>
+                                {% else %}
+                                <span class="badge bg-danger text-white px-2 py-1" style="font-size: 0.65rem; font-weight: 700; letter-spacing: 0.3px;">DIPAKAI</span>
+                                {% endif %}
+                            </div>
+                            
+                            {% if pc.status == 'Digunakan' %}
+                            <div class="mt-2 text-dark small border-top pt-2 fw-semibold" style="font-size: 0.75rem; opacity: 0.9;">
+                                <div class="mb-1 text-truncate"><i class="bi bi-person text-danger"></i> {{ pc.nama_pelanggan }}</div>
+                                <div class="text-muted mb-1" style="font-size: 0.7rem;"><i class="bi bi-clock-history text-danger"></i> Sisa: {{ pc.sisa_waktu }}</div>
+                                <div class="text-muted" style="font-size: 0.7rem;"><i class="bi bi-hourglass-split text-dark"></i> Selesai: {{ pc.waktu_selesai }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row mt-2">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="m-0 fw-bold">Transaksi Terbaru</h5>
+                <a href="{{ url_for('penyewaan.index') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Sewa Baru</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom m-0">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Pelanggan</th>
+                                <th>Komputer</th>
+                                <th>Durasi</th>
+                                <th>Biaya</th>
+                                <th>Tanggal & Waktu</th>
+                                <th>Status</th>
+                                <th class="text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trx in transaksi_terbaru %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <span class="fw-semibold">{{ trx.pelanggan.nama_pelanggan }}</span><br>
+                                    <small class="text-muted">{{ trx.pelanggan.nomor_pelanggan }} ({{ trx.pelanggan.jenis_pelanggan }})</small>
+                                </td>
+                                <td>
+                                    <span class="fw-semibold">{{ trx.komputer.nomor_pc }}</span><br>
+                                    <small class="text-muted">{{ trx.komputer.nama_pc }}</small>
+                                </td>
+                                <td>{{ trx.durasi }} jam</td>
+                                <td>
+                                    <span class="fw-semibold text-primary">{{ trx.total_biaya | rupiah }}</span><br>
+                                    <small class="text-muted">{{ trx.tarif_per_jam | rupiah }}/jam</small>
+                                </td>
+                                <td>{{ trx.waktu_transaksi | datetime_format }}</td>
+                                <td>
+                                    {% if trx.status == 'Aktif' %}
+                                    <span class="badge badge-digunakan">Aktif</span>
+                                    {% else %}
+                                    <span class="badge badge-tersedia">Selesai</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('transaksi.detail', id=trx.id) }}" class="btn btn-outline-secondary btn-sm me-1" title="Detail"><i class="bi bi-eye"></i></a>
+                                    {% if trx.status == 'Aktif' %}
+                                    <form action="{{ url_for('transaksi.selesai', id=trx.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Apakah Anda yakin ingin menyelesaikan sesi sewa ini?')">
+                                            <i class="bi bi-check-circle"></i> Selesai
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-muted">Belum ada transaksi terbaru</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4 mb-4">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-header d-flex justify-content-between align-items-center py-3">
+                <h5 class="m-0 fw-bold"><i class="bi bi-shield-check text-primary me-2"></i> Log Aktivitas Admin Terbaru</h5>
+                <a href="{{ url_for('log.index') }}" class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold">
+                    Lihat Semua Log <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% for log in log_terbaru %}
+                    <div class="list-group-item d-flex align-items-center justify-content-between p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="badge {% if log.kategori == 'Auth' %}bg-primary{% elif log.kategori == 'Komputer' %}bg-info text-dark{% elif log.kategori == 'Pelanggan' %}bg-success{% elif log.kategori == 'Sewa' %}bg-warning text-dark{% elif log.kategori == 'Kontak' %}bg-secondary{% else %}bg-dark{% endif %} rounded-pill px-3 py-2" style="font-size: 0.75rem;">
+                                {{ log.kategori }}
+                            </span>
+                            <div>
+                                <div class="fw-semibold text-dark mb-1" style="font-size: 0.9rem;">
+                                    <span class="badge bg-light text-dark border me-1">{{ log.aksi }}</span> {{ log.deskripsi }}
+                                </div>
+                                <div class="small text-muted" style="font-size: 0.78rem;">
+                                    <i class="bi bi-person-fill text-secondary me-1"></i> {{ log.admin_username }} 
+                                    {% if log.ip_address %}<span class="mx-1">•</span> <i class="bi bi-hdd-network me-1"></i> {{ log.ip_address }}{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end text-muted small" style="font-size: 0.8rem;">
+                            <i class="bi bi-clock me-1"></i> {{ log.waktu | datetime_format }}
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="p-4 text-center text-muted">Belum ada riwayat aktivitas admin.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="pdf-report-template" style="display: none;">
+    <div style="padding: 40px; font-family: 'Segoe UI', system-ui, sans-serif; color: #1e293b; background-color: #ffffff;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #0d6efd; padding-bottom: 20px; margin-bottom: 30px;">
+            <div>
+                <h1 style="margin: 0; color: #0d6efd; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px;">NetGaming Cafe</h1>
+                <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.95rem;">Premium Esports Arena & Internet Cafe</p>
+            </div>
+            <div style="text-align: right;">
+                <h3 style="margin: 0; color: #1e293b; font-size: 1.25rem; font-weight: 700;">Laporan Keuangan & Operasional</h3>
+                <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.85rem;">Dicetak: <span id="pdf-date"></span></p>
+            </div>
+        </div>
+
+        
+        <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+            <div style="flex: 1; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center;">
+                <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px;">Pendapatan Keseluruhan</div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: #0d6efd;">{{ stats.pendapatan_keseluruhan | rupiah }}</div>
+            </div>
+            <div style="flex: 1; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center;">
+                <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px;">Pendapatan Hari Ini</div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: #198754;">{{ stats.pendapatan_hari_ini | rupiah }}</div>
+            </div>
+            <div style="flex: 1; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center;">
+                <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px;">Total Transaksi</div>
+                <div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">{{ stats.total_transaksi }} Transaksi</div>
+            </div>
+        </div>
+
+        
+        <div style="display: flex; gap: 15px; margin-bottom: 35px;">
+            <div style="flex: 1; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">Total Unit PC</span>
+                <span style="font-size: 1rem; font-weight: 700; color: #1e293b;">{{ stats.total_komputer }} Unit</span>
+            </div>
+            <div style="flex: 1; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">PC Tersedia</span>
+                <span style="font-size: 1rem; font-weight: 700; color: #198754;">{{ stats.komputer_tersedia }} Unit</span>
+            </div>
+            <div style="flex: 1; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">PC Digunakan</span>
+                <span style="font-size: 1rem; font-weight: 700; color: #dc3545;">{{ stats.komputer_digunakan }} Unit</span>
+            </div>
+        </div>
+
+        
+        <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 12px; border-bottom: 2px solid #cbd5e1; padding-bottom: 8px;"><i class="bi bi-file-earmark-text"></i> Transaksi Terkini</h3>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <thead>
+                <tr style="background-color: #f8fafc; text-align: left; border-bottom: 2px solid #cbd5e1;">
+                    <th style="padding: 10px; font-weight: 700; color: #475569;">No</th>
+                    <th style="padding: 10px; font-weight: 700; color: #475569;">Pelanggan</th>
+                    <th style="padding: 10px; font-weight: 700; color: #475569;">Komputer</th>
+                    <th style="padding: 10px; font-weight: 700; color: #475569;">Durasi</th>
+                    <th style="padding: 10px; font-weight: 700; color: #475569;">Biaya</th>
+                    <th style="padding: 10px; font-weight: 700; color: #475569;">Waktu Sewa</th>
+                    <th style="padding: 10px; font-weight: 700; color: #475569;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trx in transaksi_terbaru %}
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 10px; color: #64748b;">{{ loop.index }}</td>
+                    <td style="padding: 10px; font-weight: 600; color: #1e293b;">
+                        {{ trx.pelanggan.nama_pelanggan }}
+                        <div style="font-size: 0.72rem; color: #64748b; font-weight: 400; margin-top: 2px;">{{ trx.pelanggan.nomor_pelanggan }} ({{ trx.pelanggan.jenis_pelanggan }})</div>
+                    </td>
+                    <td style="padding: 10px; font-weight: 600; color: #1e293b;">
+                        {{ trx.komputer.nomor_pc }}
+                        <div style="font-size: 0.72rem; color: #64748b; font-weight: 400; margin-top: 2px;">{{ trx.komputer.nama_pc }}</div>
+                    </td>
+                    <td style="padding: 10px; color: #1e293b;">{{ trx.durasi }} jam</td>
+                    <td style="padding: 10px; font-weight: 700; color: #0d6efd;">{{ trx.total_biaya | rupiah }}</td>
+                    <td style="padding: 10px; color: #64748b;">{{ trx.waktu_transaksi | datetime_format }}</td>
+                    <td style="padding: 10px;">
+                        {% if trx.status == 'Aktif' %}
+                        <span style="color: #dc3545; font-weight: 700; font-size: 0.75rem; background-color: #fdf2f2; padding: 2px 6px; border-radius: 4px; border: 1px solid #fde8e8;">AKTIF</span>
+                        {% else %}
+                        <span style="color: #198754; font-weight: 700; font-size: 0.75rem; background-color: #f3faf7; padding: 2px 6px; border-radius: 4px; border: 1px solid #def7ec;">SELESAI</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        
+        <div style="margin-top: 60px; text-align: center; font-size: 0.7rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+            Dokumen Laporan Keuangan NetGaming Cafe ini dihasilkan secara otomatis dan sah oleh sistem manajemen pada <span id="pdf-footer-date"></span>.
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('pc-grid-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase().trim();
+                const items = document.querySelectorAll('#pc-visual-grid .pc-grid-item');
+                
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(query)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        const btnExport = document.getElementById('btn-export-pdf');
+        if (btnExport) {
+            btnExport.addEventListener('click', function() {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) + ' WIB';
+                
+                document.getElementById('pdf-date').textContent = dateStr;
+                document.getElementById('pdf-footer-date').textContent = dateStr;
+
+                const element = document.getElementById('pdf-report-template');
+                
+                element.style.display = 'block';
+
+                const opt = {
+                    margin:       10,
+                    filename:     'laporan_keuangan_netgaming_' + now.toISOString().slice(0,10) + '.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true, logging: false },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(element).save().then(() => {
+                    element.style.display = 'none';
+                }).catch(err => {
+                    console.error("Ekspor PDF gagal:", err);
+                    element.style.display = 'none';
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}
